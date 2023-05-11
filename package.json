@@ -1,0 +1,27 @@
+{
+  "name": "mern-aretahiti",
+  "version": "1.0.0",
+  "description": "ARE Tahiti REST API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev" : "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allforthe64/MERN-ARETahiti.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allforthe64/MERN-ARETahiti/issues"
+  },
+  "homepage": "https://github.com/allforthe64/MERN-ARETahiti#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
