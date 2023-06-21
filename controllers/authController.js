@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 
 const handleLogin = async (req, res) => {
     const { username, pwd } = req.body;
-    console.log(username, pwd)
     if (!username || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' })
     
     const foundAdmin = await Admin.findOne({ username: username }).exec()
@@ -17,7 +16,7 @@ const handleLogin = async (req, res) => {
     if (match) {
 
         // create JWTs
-        /* const accessToken = jwt.sign(
+        const accessToken = jwt.sign(
             { 
                 'AdminInfo': {
                     'username': foundAdmin.username,
@@ -37,7 +36,7 @@ const handleLogin = async (req, res) => {
         // Saving refreshToken with current user
         foundAdmin.refreshToken = refreshToken
 
- */
+
         const id = foundAdmin._id
         const username = foundAdmin.username
         const email = foundAdmin.repEmail
@@ -46,8 +45,8 @@ const handleLogin = async (req, res) => {
 
         const result = await foundAdmin.save()
 
-        /* res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) //secure: true, */
-        res.json({ id, username, email, phone, region/* , accessToken */ })
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) //secure: true,
+        res.json({ id, username, email, phone, region, accessToken })
     } else {
         res.sendStatus(401)
     }
