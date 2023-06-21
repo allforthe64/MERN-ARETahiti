@@ -2,6 +2,7 @@ const Admin = require('../models/Admin')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcrypt')
 
+
 // @desc Get all boats
 // @route GET /boats
 // @access Public

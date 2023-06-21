@@ -1,5 +1,5 @@
 const allowedOrigins = [
-    'http://localhost:3000',
+    'http://localhost:5173',
     'https://www.aretahitioutriggerworld.com',
     'https://aretahitioutriggerworld.com',
     'https://www.areoutriggerworld.com',
