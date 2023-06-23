@@ -20,7 +20,8 @@ const adminSchema = new mongoose.Schema({
     region: {
         type: String,
         required: true
-    }
+    },
+    refreshToken: String
 })
 
 module.exports = mongoose.model('Admin', adminSchema)

@@ -2,22 +2,25 @@ const Admin = require('../models/Admin');
 const jwt = require('jsonwebtoken');
 
 const handleRefreshToken = async (req, res) => {
+    
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
-
-    console.log(refreshToken)
+    console.log(Admin)
 
     const foundAdmin = await Admin.findOne({ refreshToken }).exec();
 
-    if (!foundAdmin) return res.sendStatus(403); //Forbidden 
+    if (!foundAdmin) {
+        console.log('made it in here')
+        return res.sendStatus(403);
+    } //Forbidden 
+    console.log('made it past found admin check')
     // evaluate jwt 
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
             if (err || foundAdmin.username !== decoded.username) return res.sendStatus(403);
-            const roles = Object.values(foundUser.roles);
             const id = foundAdmin._id
             const username = foundAdmin.username
             const email = foundAdmin.repEmail

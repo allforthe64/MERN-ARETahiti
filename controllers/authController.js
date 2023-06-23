@@ -1,55 +1,49 @@
-const Admin = require('../models/Admin')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const Admin = require('../models/Admin');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const handleLogin = async (req, res) => {
-    const { username, pwd } = req.body;
-    if (!username || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' })
-    
-    const foundAdmin = await Admin.findOne({ username: username }).exec()
-    if (!foundAdmin) return res.sendStatus(401); //Unauthorized 
-    
-    // evaluate password 
-    const match = await bcrypt.compare(pwd, foundAdmin.password)
-    
-    
-    if (match) {
+    const { user, pwd } = req.body;
+    console.log(user, pwd)
+    if (!user || !pwd) return res.status(400).json({ 'message': 'Username and password are required.' });
 
+    const foundAdmin = await Admin.findOne({ username: user }).exec();
+    if (!foundAdmin) return res.sendStatus(401); //Unauthorized 
+    // evaluate password 
+    const match = await bcrypt.compare(pwd, foundAdmin.password);
+    if (match) {
+        const region = foundAdmin.region;
         // create JWTs
         const accessToken = jwt.sign(
-            { 
-                'AdminInfo': {
-                    'username': foundAdmin.username,
-                    'email': foundAdmin.repEmail,
-                    'phone': foundAdmin.repPhone,
-                    'region': foundAdmin.region
+            {
+                "AdminInfo": {
+                    "username": foundAdmin.username,
+                    "region": region
                 }
             },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s' }
-        )
+            { expiresIn: '10s' }
+        );
         const refreshToken = jwt.sign(
             { "username": foundAdmin.username },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '1d' }
-        )
+        );
         // Saving refreshToken with current user
-        foundAdmin.refreshToken = refreshToken
+        foundAdmin.refreshToken = refreshToken;
+        const result = await foundAdmin.save();
+        console.log(result);
+        console.log(region);
 
+        // Creates Secure Cookie with refresh token
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-        const id = foundAdmin._id
-        const username = foundAdmin.username
-        const email = foundAdmin.repEmail
-        const phone = foundAdmin.repPhone
-        const region = foundAdmin.region
+        // Send authorization roles and access token to user
+        res.json({ region, accessToken });
 
-        const result = await foundAdmin.save()
-
-        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 }) //secure: true,
-        res.json({ id, username, email, phone, region, accessToken })
     } else {
-        res.sendStatus(401)
+        res.sendStatus(401);
     }
 }
 
-module.exports = { handleLogin }
+module.exports = { handleLogin };
