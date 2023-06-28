@@ -68,11 +68,12 @@ const updateOrder = asyncHandler(async (req, res) => {
 // @route DELETE /boats
 // @access Private
 const deleteOrder = asyncHandler(async (req, res) => {
-    const { _id } = req.body
+    console.log(req.body)
+    const { id } = req.body
 
-    if (!_id) res.status(400).json({ message: 'Order id is required for delete operation' })
+    if (!id) res.status(400).json({ message: 'Order id is required for delete operation' })
 
-    const order = await Order.findById(_id).exec()
+    const order = await Order.findById(id).exec()
 
     if (!order) {
         return res.status(400).json({ message: 'No order found' })
@@ -80,7 +81,9 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
     const result = await order.deleteOne()
 
-    const reply = `Order ${result._id} has been deleted`
+    const reply = `Order ${result.id} has been deleted`
+
+    console.log('this worked')
 
     res.json(reply)
 })
