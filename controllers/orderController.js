@@ -38,30 +38,38 @@ const createOrder = asyncHandler(async (req, res) => {
 // @route PATCH /boats
 // @access Private
 const updateOrder = asyncHandler(async (req, res) => {
-    const { _id, fName, lName, email, phone, boatType, region } = req.body
+    const { id, editFName, editLName, editEmail, editPhone, editBoat, editRegion } = req.body
+
+    console.log(editBoat)
+    console.log(editRegion)
+    console.log(editPhone)
+    console.log(editEmail)
+    console.log(editLName)
+    console.log(editFName)
     
     //confirm data
-    if (!_id || !fName || !lName || !email || !phone || !boatType || !region) {
+    if (!id || !editFName || !editLName || !editEmail || !editPhone || !editBoat || !editRegion) {
+        console.log('failed here')
         return res.status(400).json({ message: 'Invalid data sent to function' })
     }
 
-    const order = await Order.findById(_id).exec()
+    const order = await Order.findById(id).exec()
 
     if (!order) {
         return res.status(400).json({ message: 'Order not found' })
     }
 
     //update user object
-    order.customerFName = fName
-    order.customerLName = lName
-    order.customerEmail = email
-    order.customerPhone = phone
-    order.boatType = boatType
-    order.region = region
+    order.customerFName = editFName
+    order.customerLName = editLName
+    order.customerEmail = editEmail
+    order.customerPhone = editPhone
+    order.boatType = editBoat
+    order.region = editRegion
 
     const updatedOrder = await order.save() 
 
-    res.json({ message: `updated boat: ${_id}`})
+    res.json({ message: `updated boat: ${id}`})
 })
 
 // @desc Delete a boat
