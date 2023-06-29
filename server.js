@@ -32,6 +32,7 @@ app.use('/login', require('./routes/authRoutes'))
 app.use('/logout', require('./routes/logout'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/order', require('./routes/orderRoutes'))
+app.use('/prebuilt', require('./routes/prebuiltRoutes'))
 
 app.all('*', (req, res) => {
     res.status(404)
